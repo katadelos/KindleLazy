@@ -1,20 +1,24 @@
-KindleLazy 0.9 - cearp
+# KindleLazy
+Remote page turns and brightness control for Kindles.
 
-Only tested on PW3, nothing else!
+KindleLazy is an application that allows the use of an external USB device (such as a mouse, keyboard or wireless presenter) to control various aspects of the reading experience when using the stock reader on Amazon Kindle devices.
 
-At the moment this only reads from event2 and event3 - this is what my device reads as.
-This should be improved later.
+At present, KindleLazy only reads events from /dev/input/event2 and /dev/input/event3, as these are the event devices presented by the external USB device used by the original author. This should be improved later.
 
-There is no hotplugging, have the device inserted before starting. If the device is removed, this app may quit.
+The USB OTG implementation on Kindle devices does not support USB device hotplugging. Have the device inserted before starting KindleLazy; if the device is removed, the application may quit.
 
-The page turn direction can be reversed (pass argument '-reverse'), so that your 'forward' button can still advance you to the next page.
-For example, with books that are 'right to left', where the next page is on the left, you would reverse the direction.
+## Device Compatibility
 
-The program will not work without a config file named 'config.json' in the same directory.
-NOT menu.json and NOT config.xml, these are files for KUAL.
+|Device|Status |
+|------|-------|
+|PW3   |Working|
 
-Here is a sample (and the default) config file:
+## Configuration
+The program will not work without a config file named `config.json` in the same directory as the KindleLazy binary. This configuration file should not be confused with the `menu.json` and `config.xml` files used by the accompanying KUAL extension.
 
+Here is a sample (and the default) `config.json` file:
+
+```
 {
    "key_brightness_down" : [ 115 ],
    "key_brightness_up" : [ 114 ],
@@ -22,30 +26,31 @@ Here is a sample (and the default) config file:
    "key_prev_page" : [ 109, 108, 105 ],
    "key_wake" : [ 15 ]
 }
-
-Errors in the config file are not handled, it will probably crash.
-Beware of commas and other punctuation.
+```
+Errors in the config file are not handled and are likely to crash KindleLazy - beware of commas and other punctuation characters.
 
 Enter the keycodes for the keys you want to trigger the actions.
 
 For the config above, the key codes represent:
 
-104 = KEY_PAGEUP            
-109 = KEY_PAGEDOWN
+|Key |Action        |
+|----|--------------|
+|104 | KEY_PAGEUP   |         
+|109 | KEY_PAGEDOWN |
+|103 | KEY_UP       |
+|108 | KEY_DOWN     |
+|105 | KEY_LEFT     |
+|106 | KEY_RIGHT    |
+|114 | VOLUME_DOWN  |
+|115 | VOLUME_UP    |
+|15  | TAB          |
 
-103 = KEY_UP
-108 = KEY_DOWN
+To view the key codes emitted by a device, run 'evtest /dev/input/mydevice' and see what values are given when pressing keys.
 
-105 = KEY_LEFT
-106 = KEY_RIGHT
+## Adjusting page turn direction
+The page turn direction can be reversed (pass argument '-reverse'), so that your 'forward' button can still advance you to the next page.
+For example, with books that are 'right to left', where the next page is on the left, you would reverse the direction.
 
-114 = VOLUME_DOWN
-115 = VOLUME_UP
-
-15 = TAB
-
-
-I can see some keycodes here, I am not sure if some devices produce different ones.
-https://android.googlesource.com/platform/frameworks/base/+/cd92588/data/keyboards/Generic.kl
-
-It is best to run 'evtest /dev/input/mydevice', and press buttons and see what values are given.
+## Credits
+- [llakssz](https://github.com/llakssz) - original author of KindleLazy
+- lucida - [original work on USB OTG input device support](https://www.mobileread.com/forums/showthread.php?t=276501)
